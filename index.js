@@ -1,7 +1,8 @@
 'use strict';
 
-var React = require('react-native');
-var { StyleSheet, Text, View, TextInput, Animated } = React;
+var React = require('react');
+var ReactNative = require('react-native');
+var { StyleSheet, Text, View, TextInput, Animated } = ReactNative;
 
 var FloatingLabel = React.createClass({
   getInitialState: function() {
@@ -84,10 +85,11 @@ var FloatLabelTextField = React.createClass({
   },
 
   render: function() {
+    const newStyles = this.props.styles || {};
     return(
-      <View style={styles.container}>
-        <View style={styles.viewContainer}>
-          <View style={styles.paddingView}></View>
+      <View style={[styles.container, newStyles.container]}>
+        <View style={[styles.viewContainer, newStyles.viewContainer]}>
+          <View style={[styles.paddingView, newStyles.paddingView]}></View>
           <View style={[styles.fieldContainer, this.withBorder()]}>
             <FloatingLabel visible={this.state.text}>
               <Text style={[styles.fieldLabel, this.labelStyle()]}>{this.placeholderValue()}</Text>
@@ -95,7 +97,7 @@ var FloatLabelTextField = React.createClass({
             <TextFieldHolder withValue={this.state.text}>
               <TextInput
                 placeholder={this.props.placeholder}
-                style={[styles.valueText]}
+                style={[styles.valueText, newStyles.valueText]}
                 defaultValue={this.props.defaultValue}
                 value={this.state.text}
                 maxLength={this.props.maxLength}
@@ -172,7 +174,7 @@ var styles = StyleSheet.create({
     flexDirection: 'row'
   },
   paddingView: {
-    width: 15
+    // width: 15
   },
   floatingLabel: {
     position: 'absolute',
