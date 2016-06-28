@@ -78,10 +78,16 @@ var FloatLabelTextField = React.createClass({
     }
   },
 
-  withBorder: function() {
+  withBorder: function(newStyles) {
     if (!this.props.noBorder) {
-      return styles.withBorder;
+      return newStyles.withBorder ? newStyles.withBorder : styles.withBorder;
     };
+  },
+
+  onFocusWithBorder: function(newStyles) {
+    if (!this.props.noBorder && this.state.focussed) {
+      return newStyles.onFocusWithBorder ? newStyles.onFocusWithBorder : styles.onFocusWithBorder;
+    }
   },
 
   render: function() {
@@ -90,9 +96,9 @@ var FloatLabelTextField = React.createClass({
       <View style={[styles.container, newStyles.container]}>
         <View style={[styles.viewContainer, newStyles.viewContainer]}>
           <View style={[styles.paddingView, newStyles.paddingView]}></View>
-          <View style={[styles.fieldContainer, this.withBorder()]}>
+          <View style={[styles.fieldContainer, this.withBorder(newStyles), newStyles.fieldContainer, this.onFocusWithBorder(newStyles)]}>
             <FloatingLabel visible={this.state.text}>
-              <Text style={[styles.fieldLabel, this.labelStyle()]}>{this.placeholderValue()}</Text>
+              <Text style={[styles.fieldLabel, newStyles.fieldLabel, this.labelStyle(newStyles)]}>{this.placeholderValue()}</Text>
             </FloatingLabel>
             <TextFieldHolder withValue={this.state.text}>
               <TextInput
@@ -117,11 +123,13 @@ var FloatLabelTextField = React.createClass({
     );
   },
   setFocus: function() {
+    // this.props.styles.container = {backgroundColor: 'red'};
+
     this.setState({
       focussed: true
     });
     try {
-      return this.props.onFocus();
+      return this.props.onFocus.call(this);
     } catch (_error) {}
   },
 
@@ -130,13 +138,13 @@ var FloatLabelTextField = React.createClass({
       focussed: false
     });
     try {
-      return this.props.onBlur();
+      return this.props.onBlur.call(this);
     } catch (_error) {}
   },
 
-  labelStyle: function() {
+  labelStyle: function(newStyles) {
     if (this.state.focussed) {
-      return styles.focussed;
+      return newStyles.focussed ? newStyles.focussed : styles.focussed;
     }
   },
 
@@ -151,7 +159,7 @@ var FloatLabelTextField = React.createClass({
       text: value
     });
     try {
-      return this.props.onChangeTextValue(value);
+      return this.props.onChangeTextValue.call(this, value);
     } catch (_error) {}
   },
 
@@ -194,6 +202,8 @@ var styles = StyleSheet.create({
   withBorder: {
     borderBottomWidth: 1 / 2,
     borderColor: '#C8C7CC',
+  },
+  onFocusWithBorder: {
   },
   valueText: {
     height: 20,
